@@ -71,7 +71,7 @@ void rte_com_byte_received(uint32_t data, uint32_t errors)
         if (checksum == RTECOM_CHECKSUM)
         {
             // NACK is returned if the command (e.g. RTECOM_READ) is not implemented or address not OK.
-            const uint8_t * p_data = &g_rtecom.command; // NACK = command value
+            const uint8_t *p_data = &g_rtecom.command;  // NACK = command value
 
             uint32_t data_size = 1U;                    // Size of ACK or NACK
             uint32_t command = g_rtecom.command;

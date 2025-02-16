@@ -31,7 +31,7 @@ The maximum data block size that can be transferred with one command in this exa
 Follow the [Contributing Guidelines](https://github.com/RTEdbg/RTEdbg/blob/master/docs/CONTRIBUTING.md) for bug reports and feature requests regarding the RTEcomLib repository. 
 Please use [RTEdbg.freeforums.net](https://rtedbg.freeforums.net/) for general discussions about the RTEdbg toolkit.
 
-When asking a support question, be clear and take the time to explain your problem properly. If your problem is not strictly related to this project, we recommend that you use [Stack Overflow](https://stackoverflow.com/) or similar forums instead. First, check if the [RTEdbg manual](https://github.com/RTEdbg/RTEdbg/releases/download/Documentation/RTEdbg.library.and.tools.manual.pdf) already contains an answer to your question or a solution to your problem.
+When asking a support question, be clear and take the time to explain your problem properly. If your problem is not strictly related to this project, we recommend that you use [Stack Overflow](https://stackoverflow.com/), [r/Embedded](https://www.reddit.com/r/embedded/) or similar question-and-answer website instead. First, check if the [RTEdbg manual](https://github.com/RTEdbg/RTEdbg/releases/download/Documentation/RTEdbg.library.and.tools.manual.pdf) already contains an answer to your question or a solution to your problem.
 
 ## Repository Structure
 This repository contains the RTEcomLib - functions for logged data transfer to the host. The subfolder **Portable** contains header files with the CPU specific specific drivers.

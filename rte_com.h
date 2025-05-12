@@ -18,9 +18,9 @@ typedef struct
 {
     volatile uint16_t no_received;
         // no_received = 0 ... 9 => Index in the buffer starting with the &command
-        // >10 => Number of characters to skip in the single-wire mode
+        // >10 => (65536 - no_received) = number of characters to skip in the single-wire mode
     uint8_t command;        // Command - this is the first byte received from the host
-    uint8_t checksum;       // The checksum is the XOR of 0xFF and the last eight bytes of
+    uint8_t checksum;       // The checksum is the XOR of 0x0F and the last eight bytes of
                             // the message (address and data word)
     uint32_t address;       // Address of data buffer to be transferred or variable to be set
     uint32_t data;          // Size of data (length) or data written to the address
@@ -28,10 +28,13 @@ typedef struct
 
 typedef enum
 {
-    // The first two commands are mandatory.
+    /* The first two commands are mandatory.
+     * Note: The RTEgetData utility sends ten bytes of data with 0xFF to abort reception if the
+     * host and embedded system are out of sync (e.g., due to electrical noise).
+     */
     RTECOM_WRITE_RTEDBG,    // Write 32-bit data to g_rtedbg (e.g. set message filter or index)
                             // Address = index of 32-bit word
-                            // Returns ACK if index is within g_rtedbg header, NACK otherwise
+                            // Returns ACK if index is within g_rtedbg structure, NACK otherwise
     RTECOM_READ_RTEDBG,     // Read data from g_rtedbg data structure
                             // Address is relative to the start of the g_rtgdb data structure.
                             // Returns: NN bytes (NN = data parameter – number of bytes requested)
@@ -68,7 +71,7 @@ extern rtecom_recv_data_t g_rtecom;  // Working variable for rte_com_byte_receiv
 /**************************
  *  FUNCTION DEFINITIONS
  **************************/
-void rte_com_byte_received(uint32_t data, uint32_t errors);
+void rte_com_byte_received(uint8_t data, uint32_t errors);
     // Callback function for processing of received data
 
 

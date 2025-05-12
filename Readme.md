@@ -11,7 +11,7 @@ The code is optimized to use as little Flash and RAM as possible. In this demo p
 
 See also the **[Readme](https://github.com/RTEdbg/RTEcomLib_NUCLEO_C071RB_Demo/blob/master/README.md)** file in the demo folder. It contains the complete demo for the NUCLEO-C071RB board.
 
-Data transfer to the host is possible with the **[RTEcomData](https://github.com/RTEdbg/RTEcomData)** utility.
+Data transfer to the host is possible with the **[RTEgetData](https://github.com/RTEdbg/RTEgetData)** utility.
 
 ### Communication Implementation
 All commands sent from the host side are ten bytes long. They contain a command, checksum, address, and data values. See rte_com.c and rte_com.h for implementation details.

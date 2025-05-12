@@ -8,7 +8,8 @@
  * @file    rte_com.c
  * @author  Branko Premzel
  * @brief   Functions to transmit log data structure over serial channel.
- *          For additional documentation, see the Readme file.
+ *          Code is optimized to use minimal Flash and RAM. For additional
+ *          documentation, see the Readme file.
  ********************************************************************************/
 
 #include "main.h"
@@ -36,7 +37,7 @@ rtecom_recv_data_t g_rtecom;    // Working variable for rte_com_byte_received()
  * @param errors Non-zero value indicates a hardware reception error (framing error, parity error, etc.).
  */
 
-void rte_com_byte_received(uint32_t data, uint32_t errors)
+void rte_com_byte_received(uint8_t data, uint32_t errors)
 {
     uint32_t no_received = g_rtecom.no_received;
 
@@ -63,8 +64,10 @@ void rte_com_byte_received(uint32_t data, uint32_t errors)
 
         if (no_received < RTECOM_RECV_PACKET_LEN)
         {
+#if defined RTECOM_TIMEOUT
              // If timeout is enabled, it stores the time of the data received.
             RTECOM_LOG_TIME_LAST_DATA_RECEIVED();   // Set time of the last received data
+#endif
             return;
         }
 
@@ -78,9 +81,10 @@ void rte_com_byte_received(uint32_t data, uint32_t errors)
 
             if (command == RTECOM_WRITE_RTEDBG)
             {
-                // Write 32-bit data to g_rtedbg (e.g. set message filter or index)
-                // Returns ACK or NACK if address value is not OK
-                if (g_rtecom.address < ((sizeof(g_rtedbg) - sizeof(g_rtedbg.buffer)) / 4U))
+                // Write 32-bit data to g_rtedbg (e.g. set message filter or index).
+                // The word address must be inside of the g_rtedbg structure.
+                // Returns ACK or NACK if address value is not OK.
+                if (g_rtecom.address < (sizeof(g_rtedbg) / 4U))
                 {
                     *(((uint32_t *)&g_rtedbg) + g_rtecom.address) = g_rtecom.data;
                     p_data++;   // ACK (pointer to checksum = 0x0F)
@@ -150,7 +154,10 @@ void rte_com_byte_received(uint32_t data, uint32_t errors)
 #endif  // RTECOM_WRITE_ENABLED == 1
 #endif  // RTECOM_READ_ENABLED == 1
 
-            rte_com_send_data(p_data, data_size);   // Send the data to host
+            if (data_size > 0U)
+            {
+                rte_com_send_data(p_data, data_size);   // Send the data to host
+            }
 
 #if RTECOM_SINGLE_WIRE == 1
             // Set the number of bytes that have to be discarded before reception starts again.
